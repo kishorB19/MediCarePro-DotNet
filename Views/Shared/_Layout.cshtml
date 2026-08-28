@@ -1,0 +1,132 @@
+@using Microsoft.AspNetCore.Identity
+@using HMS.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = UserManager.GetUserAsync(User).Result;
+    var isAuthenticated = SignInManager.IsSignedIn(User);
+    var role = user?.Role ?? "";
+    var fullName = user?.FullName ?? "";
+    var initials = fullName.Length > 0 ? string.Join("", fullName.Split(' ').Where(w => w.Length > 0).Select(w => w[0])).ToUpper() : "U";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MediCare Pro</title>
+    <meta name="description" content="MediCare Pro - Advanced Doctor Appointment Portal for managing healthcare appointments, prescriptions, and medical records." />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    @if (isAuthenticated && role != "")
+    {
+        <div class="app-layout">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-brand">Medi<span>Care</span> Portal</div>
+                </div>
+                <nav class="sidebar-nav">
+                    @if (role == "Admin")
+                    {
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Main</div>
+                            <a href="@Url.Action("Dashboard", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Management</div>
+                            <a href="@Url.Action("Doctors", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Doctors" || ViewContext.RouteData.Values["action"]?.ToString() == "CreateDoctor" ? "active" : "")">
+                                Doctors
+                            </a>
+                            <a href="@Url.Action("Patients", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Patients" ? "active" : "")">
+                                Patients
+                            </a>
+                            <a href="@Url.Action("Appointments", "Admin")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Appointments" ? "active" : "")">
+                                Appointments
+                            </a>
+                        </div>
+                    }
+                    @if (role == "Doctor")
+                    {
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Main</div>
+                            <a href="@Url.Action("Dashboard", "Doctor")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Manage</div>
+                            <a href="@Url.Action("Appointments", "Doctor")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Appointments" ? "active" : "")">
+                                My Appointments
+                            </a>
+                            <a href="@Url.Action("Availability", "Doctor")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Availability" ? "active" : "")">
+                                Availability
+                            </a>
+                        </div>
+                    }
+                    @if (role == "Patient")
+                    {
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Main</div>
+                            <a href="@Url.Action("Dashboard", "Patient")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Services</div>
+                            <a href="@Url.Action("Doctors", "Patient")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Doctors" ? "active" : "")">
+                                Find Doctors
+                            </a>
+                            <a href="@Url.Action("Appointments", "Patient")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Appointments" ? "active" : "")">
+                                My Appointments
+                            </a>
+                            <a href="@Url.Action("Prescriptions", "Patient")" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Prescriptions" ? "active" : "")">
+                                Prescriptions
+                            </a>
+                        </div>
+                    }
+                </nav>
+                <div class="sidebar-footer">
+                    <form asp-action="Logout" asp-controller="Account" method="post">
+                        <button type="submit" class="sidebar-link w-100" style="background:none; color: var(--danger); border: 1px solid var(--danger-bg); border-radius: var(--radius-sm);">
+                            Sign Out
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <div class="main-content">
+                <header class="topbar">
+                    <h1 class="topbar-title">@ViewData["Title"]</h1>
+                    <div class="topbar-actions">
+                        <div class="topbar-user">
+                            <div class="user-avatar">@initials</div>
+                            <div class="user-info">
+                                <div class="user-name">@fullName</div>
+                                <div class="user-role">@role</div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="page-content">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div data-success-message="@TempData["Success"]"></div>
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+
+    <script src="~/js/site.js"></script>
+</body>
+</html>

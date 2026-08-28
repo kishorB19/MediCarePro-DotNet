@@ -1,0 +1,49 @@
+@model List<HMS.Models.Doctor>
+@{
+    ViewData["Title"] = "Find Doctors";
+}
+
+<form method="get" class="search-bar">
+    <input type="text" name="search" class="form-control" placeholder="Search by name or specialization..." value="@ViewBag.Search" />
+    <button type="submit" class="btn btn-primary">Search</button>
+    @if (ViewBag.Search != null)
+    {
+        <a href="@Url.Action("Doctors", "Patient")" class="btn btn-secondary">Clear</a>
+    }
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h4>No doctors found</h4>
+        <p>Try searching with different keywords.</p>
+    </div>
+}
+else
+{
+    <div class="doctor-grid">
+        @foreach (var d in Model)
+        {
+            var initials = string.Join("", (d.User?.FullName ?? "D").Split(' ').Where(w => w.Length > 0).Select(w => w[0]));
+            <div class="doctor-card">
+                <div class="doctor-card-header">
+                    <div class="doctor-avatar">@initials</div>
+                    <div>
+                        <div class="doctor-name">@d.User?.FullName</div>
+                        <div class="doctor-spec">@d.Specialization</div>
+                    </div>
+                </div>
+                <div class="doctor-details">
+                    <div class="doctor-detail">🎓 @d.Qualification</div>
+                    <div class="doctor-detail">⏱ @d.ExperienceYears yrs</div>
+                </div>
+                <div class="doctor-bio">@(d.Bio ?? "No bio available.")</div>
+                <div class="doctor-card-footer">
+                    <div class="doctor-fee">₹@d.ConsultationFee <span>/ visit</span></div>
+                    <a href="@Url.Action("BookAppointment", "Patient", new { doctorId = d.DoctorId })" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,36 @@
+@model List<HMS.Models.Patient>
+@{
+    ViewData["Title"] = "All Patients";
+}
+
+<p class="text-muted mb-6">@Model.Count patients registered</p>
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Blood Group</th>
+                    <th>Phone</th>
+                    <th>Date of Birth</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@p.User?.FullName</td>
+                        <td>@p.User?.Email</td>
+                        <td>@(p.Gender ?? "—")</td>
+                        <td>@(p.BloodGroup ?? "—")</td>
+                        <td>@(p.Phone ?? "—")</td>
+                        <td>@(p.DateOfBirth?.ToString("dd MMM yyyy") ?? "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

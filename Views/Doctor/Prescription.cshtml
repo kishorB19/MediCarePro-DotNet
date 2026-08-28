@@ -1,0 +1,69 @@
+@model HMS.Models.ViewModels.PrescriptionViewModel
+@{
+    ViewData["Title"] = "Prescription";
+    var appointment = ViewBag.Appointment as HMS.Models.Appointment;
+}
+
+<div style="max-width: 700px;">
+    @if (appointment != null)
+    {
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3>Appointment Details</h3>
+                <span class="badge badge-@appointment.Status.ToString().ToLower()">@appointment.Status</span>
+            </div>
+            <div class="card-body">
+                <div class="prescription-detail">
+                    <div class="detail-item">
+                        <div class="detail-label">Patient</div>
+                        <div class="detail-value">@appointment.Patient?.User?.FullName</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">@appointment.AppointmentDate.ToString("dd MMM yyyy")</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">@appointment.TimeSlot</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Reason</div>
+                        <div class="detail-value">@(appointment.Reason ?? "—")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h3>💊 Prescription</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Prescription" method="post">
+                <input type="hidden" asp-for="AppointmentId" />
+                <div asp-validation-summary="All" class="alert alert-danger" style="display: @(ViewData.ModelState.ErrorCount > 0 ? "flex" : "none")"></div>
+
+                <div class="form-group">
+                    <label asp-for="Medication" class="form-label">Medication</label>
+                    <textarea asp-for="Medication" class="form-control" placeholder="e.g., Paracetamol 500mg, Amoxicillin 250mg"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Dosage" class="form-label">Dosage</label>
+                    <input asp-for="Dosage" class="form-control" placeholder="e.g., 1 tablet twice daily after meals" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Instructions" class="form-label">Instructions</label>
+                    <textarea asp-for="Instructions" class="form-control" placeholder="Additional instructions for the patient..."></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Prescription</button>
+                    <a href="@Url.Action("Appointments", "Doctor")" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

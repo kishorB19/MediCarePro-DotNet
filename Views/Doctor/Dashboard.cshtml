@@ -1,0 +1,65 @@
+@model HMS.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2 style="font-size: 1.5rem; font-weight: 300; margin-bottom: 24px;">Welcome, <span style="font-weight: 600; color: var(--primary-light);">@ViewBag.DoctorName</span></h2>
+
+<div class="stats-grid">
+    <div class="stat-card purple">
+        <div class="stat-icon purple">📋</div>
+        <div class="stat-value">@Model.TotalAppointments</div>
+        <div class="stat-label">Total Appointments</div>
+    </div>
+    <div class="stat-card cyan">
+        <div class="stat-icon cyan">📅</div>
+        <div class="stat-value">@Model.TodayAppointments</div>
+        <div class="stat-label">Today</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon orange">⏳</div>
+        <div class="stat-value">@Model.PendingAppointments</div>
+        <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon green">✓</div>
+        <div class="stat-value">@Model.CompletedAppointments</div>
+        <div class="stat-label">Completed</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Appointments</h3>
+        <a href="@Url.Action("Appointments", "Doctor")" class="btn btn-sm btn-outline">View All</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.RecentAppointments.Count == 0)
+                {
+                    <tr><td colspan="5" class="text-center text-muted" style="padding:40px;">No appointments yet.</td></tr>
+                }
+                @foreach (var a in Model.RecentAppointments)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@a.Patient?.User?.FullName</td>
+                        <td>@a.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@a.TimeSlot</td>
+                        <td>@(a.Reason ?? "—")</td>
+                        <td><span class="badge badge-@a.Status.ToString().ToLower()">@a.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

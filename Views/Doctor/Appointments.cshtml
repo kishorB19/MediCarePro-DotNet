@@ -1,0 +1,68 @@
+@model List<HMS.Models.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-muted" style="padding: 40px;">No appointments found.</td></tr>
+                }
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@a.Patient?.User?.FullName</td>
+                        <td>@a.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@a.TimeSlot</td>
+                        <td>@(a.Reason ?? "—")</td>
+                        <td><span class="badge badge-@a.Status.ToString().ToLower()">@a.Status</span></td>
+                        <td>
+                            <div class="actions-cell">
+                                @if (a.Status == HMS.Models.AppointmentStatus.Pending)
+                                {
+                                    <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@a.AppointmentId" />
+                                        <input type="hidden" name="status" value="Confirmed" />
+                                        <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                                    </form>
+                                    <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@a.AppointmentId" />
+                                        <input type="hidden" name="status" value="Cancelled" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                    </form>
+                                }
+                                @if (a.Status == HMS.Models.AppointmentStatus.Confirmed)
+                                {
+                                    <form asp-action="UpdateStatus" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@a.AppointmentId" />
+                                        <input type="hidden" name="status" value="Completed" />
+                                        <button type="submit" class="btn btn-info btn-sm">Complete</button>
+                                    </form>
+                                }
+                                @if (a.Status == HMS.Models.AppointmentStatus.Completed)
+                                {
+                                    <a href="@Url.Action("Prescription", "Doctor", new { appointmentId = a.AppointmentId })" class="btn btn-warning btn-sm">
+                                        @(a.Prescription != null ? "Edit Rx" : "Add Rx")
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

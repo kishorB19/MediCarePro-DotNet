@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "MediCare Pro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="landing-page">
+    <nav class="landing-nav">
+        <div class="landing-logo">
+            MediCare Pro
+        </div>
+        <div class="landing-nav-links">
+            <a href="@Url.Action("Login", "Account")">Sign In</a>
+            <a href="@Url.Action("Register", "Account")" class="btn-nav-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">Healthcare Management System</div>
+            <h1 class="hero-title">Your Health, Our Priority</h1>
+            <p class="hero-subtitle">
+                Book appointments with top doctors, manage your health records, and access prescriptions — all from one seamless platform.
+            </p>
+            <div class="hero-buttons">
+                <a href="@Url.Action("Register", "Account")" class="btn btn-primary">
+                    Book Appointment
+                </a>
+                <a href="@Url.Action("Login", "Account")" class="btn btn-secondary">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="section-header">
+            <h2>Why Choose MediCare Pro?</h2>
+            <p>Everything you need for a seamless healthcare experience, designed with care.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Expert Doctors</h3>
+                <p>Browse and connect with verified doctors across multiple specializations. Read profiles, check experience, and choose the best fit.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Easy Booking</h3>
+                <p>Book appointments in seconds with our real-time slot availability system. Pick your date, choose a time, done.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Digital Prescriptions</h3>
+                <p>Access your prescriptions online anytime. Doctors can issue digital prescriptions right after your consultation.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Secure & Private</h3>
+                <p>Your health data is protected with role-based access control and secure authentication. Privacy is our priority.</p>
+            </div>
+        </div>
+    </section>
+</div>

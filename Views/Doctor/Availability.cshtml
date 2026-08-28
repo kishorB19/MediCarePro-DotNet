@@ -1,0 +1,47 @@
+@model List<HMS.Models.Availability>
+@{
+    ViewData["Title"] = "Manage Availability";
+    var days = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+}
+
+<div style="max-width: 900px;">
+    <div class="card">
+        <div class="card-header">
+            <h3>Weekly Schedule</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="SaveAvailability" method="post">
+                <div class="availability-grid">
+                    @for (int i = 0; i < days.Length; i++)
+                    {
+                        var day = days[i];
+                        var existing = Model.FirstOrDefault(a => a.DayOfWeek == day);
+                        var startTime = existing?.StartTime.ToString(@"hh\:mm") ?? "09:00";
+                        var endTime = existing?.EndTime.ToString(@"hh\:mm") ?? "17:00";
+                        var isActive = existing?.IsActive ?? (i < 5);
+
+                        <div class="availability-row">
+                            <div class="availability-day">
+                                @day
+                                <input type="hidden" name="slots[@i].DayOfWeek" value="@day" />
+                            </div>
+                            <div>
+                                <input type="time" name="slots[@i].StartTime" value="@startTime" class="form-control" />
+                            </div>
+                            <div>
+                                <input type="time" name="slots[@i].EndTime" value="@endTime" class="form-control" />
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="slots[@i].IsActive" value="true" @(isActive ? "checked" : "") />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="mt-6">
+                    <button type="submit" class="btn btn-primary">Save Availability</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

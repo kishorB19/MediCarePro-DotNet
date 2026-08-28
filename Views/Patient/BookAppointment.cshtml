@@ -1,0 +1,59 @@
+@model HMS.Models.ViewModels.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<div style="max-width: 800px;">
+    @if (Model.Doctor != null)
+    {
+        <div class="card mb-6">
+            <div class="card-body">
+                <div class="doctor-card-header">
+                    <div class="doctor-avatar" style="width:64px;height:64px;font-size:1.5rem;">
+                        @string.Join("", (Model.Doctor.User?.FullName ?? "D").Split(' ').Where(w => w.Length > 0).Select(w => w[0]))
+                    </div>
+                    <div>
+                        <div class="doctor-name" style="font-size:1.25rem;">@Model.Doctor.User?.FullName</div>
+                        <div class="doctor-spec">@Model.Doctor.Specialization — @Model.Doctor.Qualification</div>
+                        <div style="margin-top: 8px; color: var(--success); font-weight: 600;">₹@Model.Doctor.ConsultationFee / visit</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h3>📅 Select Date & Time</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="BookAppointment" method="post">
+                <input type="hidden" asp-for="DoctorId" id="DoctorId" />
+                <div asp-validation-summary="All" class="alert alert-danger" style="display: @(ViewData.ModelState.ErrorCount > 0 ? "flex" : "none")"></div>
+
+                <div class="form-group">
+                    <label asp-for="AppointmentDate" class="form-label">Appointment Date</label>
+                    <input asp-for="AppointmentDate" class="form-control" type="date" id="AppointmentDate" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Available Slots</label>
+                    <div id="slotsContainer" class="time-slots">
+                        <p class="text-muted">Select a date to see available slots.</p>
+                    </div>
+                    <input type="hidden" asp-for="TimeSlot" id="TimeSlot" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Reason" class="form-label">Reason for Visit</label>
+                    <textarea asp-for="Reason" class="form-control" placeholder="Describe your symptoms or reason for the visit..."></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                    <a href="@Url.Action("Doctors", "Patient")" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+@model HMS.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="stats-grid">
+    <div class="stat-card purple">
+        <div class="stat-icon purple">👨‍⚕️</div>
+        <div class="stat-value">@Model.TotalDoctors</div>
+        <div class="stat-label">Total Doctors</div>
+    </div>
+    <div class="stat-card cyan">
+        <div class="stat-icon cyan">👥</div>
+        <div class="stat-value">@Model.TotalPatients</div>
+        <div class="stat-label">Total Patients</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon green">📋</div>
+        <div class="stat-value">@Model.TotalAppointments</div>
+        <div class="stat-label">Total Appointments</div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon orange">⏳</div>
+        <div class="stat-value">@Model.PendingAppointments</div>
+        <div class="stat-label">Pending</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Appointments</h3>
+        <a href="@Url.Action("Appointments", "Admin")" class="btn btn-sm btn-outline">View All</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model.RecentAppointments)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@a.Patient?.User?.FullName</td>
+                        <td>@a.Doctor?.User?.FullName</td>
+                        <td>@a.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@a.TimeSlot</td>
+                        <td><span class="badge badge-@a.Status.ToString().ToLower()">@a.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

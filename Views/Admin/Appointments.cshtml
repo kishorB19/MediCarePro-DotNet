@@ -1,0 +1,38 @@
+@model List<HMS.Models.Appointment>
+@{
+    ViewData["Title"] = "All Appointments";
+}
+
+<p class="text-muted mb-6">@Model.Count total appointments</p>
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>#@a.AppointmentId</td>
+                        <td style="color: var(--text-primary); font-weight: 500;">@a.Patient?.User?.FullName</td>
+                        <td>@a.Doctor?.User?.FullName</td>
+                        <td>@a.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@a.TimeSlot</td>
+                        <td>@(a.Reason ?? "—")</td>
+                        <td><span class="badge badge-@a.Status.ToString().ToLower()">@a.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

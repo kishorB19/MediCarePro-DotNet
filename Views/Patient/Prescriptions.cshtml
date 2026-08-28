@@ -1,0 +1,49 @@
+@model List<HMS.Models.Prescription>
+@{
+    ViewData["Title"] = "My Prescriptions";
+}
+
+@if (Model.Count == 0)
+{
+    <div class="empty-state">
+        <div class="empty-icon">💊</div>
+        <h4>No Prescriptions Yet</h4>
+        <p>Your prescriptions will appear here after a completed consultation.</p>
+    </div>
+}
+else
+{
+    @foreach (var p in Model)
+    {
+        <div class="prescription-card">
+            <div class="prescription-header">
+                <div>
+                    <div style="font-weight: 600; font-size: 1.05rem; color: var(--text-primary);">@p.Appointment?.Doctor?.User?.FullName</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">@p.Appointment?.Doctor?.Specialization</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Prescribed</div>
+                    <div style="font-weight: 500;">@p.PrescribedDate.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+            <div class="prescription-detail">
+                <div class="detail-item">
+                    <div class="detail-label">Medication</div>
+                    <div class="detail-value">@p.Medication</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Dosage</div>
+                    <div class="detail-value">@(p.Dosage ?? "—")</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Instructions</div>
+                    <div class="detail-value">@(p.Instructions ?? "—")</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Visit Date</div>
+                    <div class="detail-value">@p.Appointment?.AppointmentDate.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+        </div>
+    }
+}

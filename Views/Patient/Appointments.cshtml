@@ -1,0 +1,53 @@
+@model List<HMS.Models.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3>Appointment History</h3>
+        <a href="@Url.Action("Doctors", "Patient")" class="btn btn-primary btn-sm">+ New Appointment</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-muted" style="padding: 40px;">No appointments found.</td></tr>
+                }
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@a.Doctor?.User?.FullName</td>
+                        <td>@a.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@a.TimeSlot</td>
+                        <td>@(a.Reason ?? "—")</td>
+                        <td><span class="badge badge-@a.Status.ToString().ToLower()">@a.Status</span></td>
+                        <td>
+                            @if (a.Status == HMS.Models.AppointmentStatus.Pending)
+                            {
+                                <form asp-action="CancelAppointment" asp-route-id="@a.AppointmentId" method="post" style="display:inline;" onsubmit="return confirm('Cancel this appointment?')">
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                </form>
+                            }
+                            @if (a.Prescription != null)
+                            {
+                                <span class="badge badge-completed" style="cursor:default;">Rx Available</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

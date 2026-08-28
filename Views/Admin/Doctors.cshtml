@@ -1,0 +1,43 @@
+@model List<HMS.Models.Doctor>
+@{
+    ViewData["Title"] = "Manage Doctors";
+}
+
+<div class="d-flex justify-between align-center mb-6">
+    <p class="text-muted">@Model.Count doctors registered</p>
+    <a href="@Url.Action("CreateDoctor", "Admin")" class="btn btn-primary btn-sm">+ Add Doctor</a>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                    <th>Experience</th>
+                    <th>Fee</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model)
+                {
+                    <tr>
+                        <td style="color: var(--text-primary); font-weight: 500;">@d.User?.FullName</td>
+                        <td>@d.User?.Email</td>
+                        <td><span class="badge badge-confirmed">@d.Specialization</span></td>
+                        <td>@d.ExperienceYears years</td>
+                        <td style="color: var(--success); font-weight: 600;">₹@d.ConsultationFee</td>
+                        <td>
+                            <form asp-action="DeleteDoctor" asp-route-id="@d.DoctorId" method="post" style="display:inline;" onsubmit="return confirm('Remove this doctor?')">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
